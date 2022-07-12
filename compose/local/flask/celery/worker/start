@@ -4,4 +4,5 @@ set -o errexit
 set -o nounset
 
 # celery -A app.celery worker --loglevel=info
-flask celery_worker
+#flask celery_worker
+/venv/.venv/bin/python -m flask celery_worker
