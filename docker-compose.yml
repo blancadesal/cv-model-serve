@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 5010:5000
+      - 5000:5000
     env_file:
       - .env/.dev
     environment:
