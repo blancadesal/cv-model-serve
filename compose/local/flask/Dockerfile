@@ -11,10 +11,6 @@ RUN poetry install --no-ansi
 FROM python:3.9-slim-bullseye
 WORKDIR /app
 
-
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
-
 RUN apt-get update \
     && apt-get install -y build-essential \
     && apt-get install -y libpq-dev \
@@ -42,6 +38,10 @@ RUN chmod +x /start-flower
 
 #RUN adduser app -h /app -u 1000 -g 1000 -DH
 #USER 1000
+
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PATH=/venv/.venv/bin:$PATH
 
 # change this to match your application
 #CMD /app/.venv/bin/python -m module_name
