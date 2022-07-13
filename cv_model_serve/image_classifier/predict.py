@@ -21,4 +21,4 @@ def predict(model: Model, sample: ndarray) -> dict:
             f'Unexpected prediction shape: {prediction.shape}. Should be (1, 2)'
         )
 
-    return {'prediction': label, 'confidence': prediction[0, winner_index]}
+    return {'prediction': label, 'confidence': float(prediction[0, winner_index])}
