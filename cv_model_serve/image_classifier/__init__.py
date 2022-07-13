@@ -1,1 +1,1 @@
-from . import tasks  # noqa
+from . import events, tasks  # noqa
