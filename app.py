@@ -1,3 +1,4 @@
+import base64
 import eventlet  #  enable WebSocket support
 eventlet.monkey_patch()
 
@@ -15,11 +16,11 @@ app = create_app()
 def hello():
     return "Hello, World!"
 
-@app.route("/predict")
+@app.route("/predict", methods=["POST"])
 def predict():
     image = flask.request.files["image"].read()
 
-    task = get_prediction.delay(image)
+    task = get_prediction.delay(base64.encodebytes(image).decode('ascii'))
     return task.id
 
 
