@@ -46,4 +46,4 @@ ENV PATH=/venv/.venv/bin:$PATH
 # change this to match your application
 #CMD /app/.venv/bin/python -m module_name
 # or
-CMD /venv/.venv/bin/python app.py
+ENTRYPOINT ["/entrypoint"]
