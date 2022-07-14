@@ -1,28 +1,24 @@
 FROM python:3.9-slim-bullseye as builder
-
-WORKDIR /app
+WORKDIR /venv
+COPY pyproject.toml poetry.lock /venv/
 
 RUN pip install poetry
+RUN poetry config virtualenvs.in-project true
+RUN poetry install --no-ansi
 
-COPY pyproject.toml poetry.lock ./
+# ---
 
-RUN poetry export --without-hashes -f requirements.txt > requirements.txt
-
-
-FROM python:3.9-slim-bullseye as python-base
-
-ENV PYTHONUNBUFFERED 1
-ENV PYTHONDONTWRITEBYTECODE 1
+FROM python:3.9-slim-bullseye
+WORKDIR /app
 
 RUN apt-get update \
-  && apt-get install -y build-essential \
-  && apt-get install -y libpq-dev \
-  && apt-get install -y telnet netcat \
-  && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
-  && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y build-essential \
+    && apt-get install -y libpq-dev \
+    && apt-get install -y telnet netcat \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && rm -rf /var/lib/apt/lists/*
 
-# Add code for Poetry here
-
+COPY --from=builder /venv /venv
 
 COPY ./compose/local/flask/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
@@ -40,12 +36,14 @@ COPY ./compose/local/flask/celery/flower/start /start-flower
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
 
-WORKDIR /app
+#RUN adduser app -h /app -u 1000 -g 1000 -DH
+#USER 1000
 
-COPY --from=builder /app/requirements.txt .
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PATH=/venv/.venv/bin:$PATH
 
-RUN pip install --no-deps -r requirements.txt
-
-COPY . .
-
+# change this to match your application
+#CMD /app/.venv/bin/python -m module_name
+# or
 ENTRYPOINT ["/entrypoint"]

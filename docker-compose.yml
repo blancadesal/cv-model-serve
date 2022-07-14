@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - 5010:5000
+      - 5000:5000
     env_file:
       - .env/.dev
     environment:
@@ -61,7 +61,7 @@ services:
     environment:
       - FLASK_APP=celery_app
     ports:
-      - 5557:5555
+      - 5555:5555
     depends_on:
       - redis
       - db
