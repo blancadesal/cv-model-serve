@@ -29,9 +29,10 @@ def predict_from_url():
     image_url = request.args.get("image_url", None)
     if image_url is None:
         return "Parameter image_url not found.", 400
-    if not image_url.startswith("https://upload.wikimeida.org"):
+    if not image_url.startswith("https://upload.wikimedia.org"):
         return "Only urls from https://upload.wikimedia.org are allowed", 400
 
+    # maybe move this to the worker instead
     response = requests.get(
         image_url,
         headers={
@@ -39,13 +40,11 @@ def predict_from_url():
         },
         stream=True,
     )
-    if not response.ok():
+    if not response.ok:
         return response.text, response.status_code
 
     image = response.raw.read()
-    task: AsyncResult = get_prediction.delay(
-        base64.encodebytes(image.encode("utf8")).decode("ascii")
-    )
+    task: AsyncResult = get_prediction.delay(base64.encodebytes(image).decode("ascii"))
     return {"task_id": task.id}
 
 

@@ -33,6 +33,29 @@ Implemented a `/task/<task_id>` endpoint to get the results of the tasks trigger
     "task_id": "0387051d-4bc1-46c8-93c1-4eee2c4e05db"
   }
 
+Implemented also a GET version of `/predict` that accepts a `image_url` parameter (url from https://upload.wikimedia.org)::
+
+
+ dcaro@vulcanus$ curl -vv 'http://127.0.0.1:5000/predict?image_url=https://upload.wikimedia.org/wikipedia/commons/5/57/Puesta_de_sol%2C_desierto_de_Namib%2C_Namibia%2C_2018-08-05%2C_DD_84-90_PAN.jpg'
+ < HTTP/1.1 200 OK
+ < Server: Werkzeug/2.1.2 Python/3.9.13
+ < Date: Fri, 15 Jul 2022 17:25:21 GMT
+ < Content-Type: application/json
+ < Content-Length: 56
+ < Connection: close
+ {
+   "task_id": "27ac478e-8712-4a87-a10a-b0ec2eb18eb4"
+ }
+
+ 07:25 PM ~/Work/repos/per_user/blancadesal/cv-model-serve  (main|✚ 1)
+ dcaro@vulcanus$ curl -vv 'http://127.0.0.1:5000/task/27ac478e-8712-4a87-a10a-b0ec2eb18eb4'
+ {
+   "error": null,
+   "result": "{'prediction': 'suitable', 'confidence': 0.9997747540473938}",
+   "state": "SUCCESS",
+   "task_id": "27ac478e-8712-4a87-a10a-b0ec2eb18eb4"
+ }
+
 Installation
 ============
 
