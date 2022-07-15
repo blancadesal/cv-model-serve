@@ -3,6 +3,7 @@ import subprocess
 
 from celery.result import AsyncResult
 from flask import request
+import requests
 
 from cv_model_serve import create_app, ext_celery
 from cv_model_serve.image_classifier.tasks import get_prediction
@@ -17,9 +18,34 @@ def hello():
 
 
 @app.route("/predict", methods=["POST"])
-def predict():
+def predict_form_post():
     image = request.files["image"].read()
     task: AsyncResult = get_prediction.delay(base64.encodebytes(image).decode("ascii"))
+    return {"task_id": task.id}
+
+
+@app.route("/predict", methods=["GET"])
+def predict_from_url():
+    image_url = request.args.get("image_url", None)
+    if image_url is None:
+        return "Parameter image_url not found.", 400
+    if not image_url.startswith("https://upload.wikimeida.org"):
+        return "Only urls from https://upload.wikimedia.org are allowed", 400
+
+    response = requests.get(
+        image_url,
+        headers={
+            "User-Agent": "predict.ml-collab-2022/0.1 (http://predict-ml-collab-2022.wikimedia.org dcaro@wikimedia.org) python-requests"
+        },
+        stream=True,
+    )
+    if not response.ok():
+        return response.text, response.status_code
+
+    image = response.raw.read()
+    task: AsyncResult = get_prediction.delay(
+        base64.encodebytes(image.encode("utf8")).decode("ascii")
+    )
     return {"task_id": task.id}
 
 
