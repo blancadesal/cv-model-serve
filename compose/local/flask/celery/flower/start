@@ -11,7 +11,7 @@ until worker_ready; do
   echo 'Waiting for Celery workers to be ready...' >&2
   sleep 1
 done
-echo 'Celery workers ready' >&2 
+echo 'Celery workers ready' >&2
 
 celery -A app.celery  \
     --broker="${CELERY_BROKER_URL}" \
