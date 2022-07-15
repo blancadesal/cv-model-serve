@@ -17,16 +17,16 @@ services:
       - FLASK_APP=app
     depends_on:
       - redis
-      - db
+      #- db
 
-  db:
-    image: postgres:13-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_DB=flask_celery
-      - POSTGRES_USER=flask_celery
-      - POSTGRES_PASSWORD=flask_celery
+#  db:
+#    image: postgres:13-alpine
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data/
+#    environment:
+#      - POSTGRES_DB=flask_celery
+#      - POSTGRES_USER=flask_celery
+#      - POSTGRES_PASSWORD=flask_celery
 
   redis:
     image: redis:6-alpine
@@ -45,7 +45,7 @@ services:
       - FLASK_APP=app
     depends_on:
       - redis
-      - db
+      #- db
 
 
   flower:
@@ -64,7 +64,7 @@ services:
       - 5555:5555
     depends_on:
       - redis
-      - db
+      #- db
 
-volumes:
-  postgres_data:
+#volumes:
+#  postgres_data:

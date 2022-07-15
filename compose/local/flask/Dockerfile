@@ -20,10 +20,6 @@ RUN apt-get update \
 
 COPY --from=builder /venv /venv
 
-COPY ./compose/local/flask/entrypoint /entrypoint
-RUN sed -i 's/\r$//g' /entrypoint
-RUN chmod +x /entrypoint
-
 COPY ./compose/local/flask/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
@@ -46,4 +42,4 @@ ENV PATH=/venv/.venv/bin:$PATH
 # change this to match your application
 #CMD /app/.venv/bin/python -m module_name
 # or
-ENTRYPOINT ["/entrypoint"]
+#ENTRYPOINT ["/start"]

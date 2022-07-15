@@ -2,7 +2,7 @@
 name = "cv-model-serve"
 version = "0.1.0"
 description = ""
-authors = ["Slavina Stefanova <slavina.stefanova@gmail.com>"]
+authors = ["Slavina Stefanova <slavina.stefanova@gmail.com>", "David Caro <me@dcaro.es>"]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
@@ -11,8 +11,6 @@ celery = "^5.2.7"
 redis = "^4.3.4"
 flower = "^1.1.0"
 requests = "^2.28.1"
-Flask-Migrate = "^3.1.0"
-Flask-SQLAlchemy = "^2.5.1"
 Flask-CeleryExt = "^0.4.3"
 psycopg2-binary = "^2.9.3"
 watchgod = "^0.8.2"
