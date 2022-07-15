@@ -12,7 +12,7 @@ def predict(model: Model, sample: ndarray) -> dict:
     # Prediction at index 0 is NSFW
     index_labels = {0: "NSFW", 1: "suitable"}
 
-    prediction = model.predict(sample)
+    prediction = model(sample)
     winner_index = argmax(prediction)
 
     label = index_labels.get(winner_index)
