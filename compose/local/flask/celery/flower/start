@@ -8,11 +8,12 @@ worker_ready() {
 }
 
 until worker_ready; do
-  >&2 echo 'Waiting for Celery workers to be ready...'
+  echo 'Waiting for Celery workers to be ready...' >&2
   sleep 1
 done
->&2 echo 'Celery workers ready'
+echo 'Celery workers ready' >&2 
 
 celery -A celery_app.celery  \
     --broker="${CELERY_BROKER_URL}" \
-    flower
+    flower \
+    --port=5555
