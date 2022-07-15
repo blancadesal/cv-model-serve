@@ -18,11 +18,8 @@ class BaseConfig:
         "CELERY_RESULT_BACKEND", "redis://127.0.0.1:6379/0"
     )
 
-    SECRET_KEY = os.environ.get('SECRET_KEY')
+    SECRET_KEY = os.environ.get("SECRET_KEY")
 
-    SOCKETIO_MESSAGE_QUEUE = os.environ.get(
-        "SOCKETIO_MESSAGE_QUEUE", "redis://127.0.0.1:6379/0"
-    )
 
 
 class DevelopmentConfig(BaseConfig):
