@@ -48,8 +48,10 @@ def get_task(task_id: str):
         )
     return response
 
+
 def run_worker():
     subprocess.call(["celery", "-A", "app.celery", "worker", "--loglevel=info"])
+
 
 @app.cli.command("celery_worker")
 def celery_worker():
@@ -60,4 +62,3 @@ def celery_worker():
 
 if __name__ == "__main__":
     app.run(debug=True, use_reloader=True, host="0.0.0.0")
-

@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 from flask import Flask
 from flask_celeryext import FlaskCeleryExt

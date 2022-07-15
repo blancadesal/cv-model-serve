@@ -10,7 +10,7 @@ def load_model(path: str) -> Model:
 def predict(model: Model, sample: ndarray) -> dict:
     """Classify one pre-processed image sample as NSFW or not."""
     # Prediction at index 0 is NSFW
-    index_labels = {0: 'NSFW', 1: 'suitable'}
+    index_labels = {0: "NSFW", 1: "suitable"}
 
     prediction = model.predict(sample)
     winner_index = argmax(prediction)
@@ -18,7 +18,7 @@ def predict(model: Model, sample: ndarray) -> dict:
     label = index_labels.get(winner_index)
     if label is None:  # This shouldn't happen
         raise ValueError(
-            f'Unexpected prediction shape: {prediction.shape}. Should be (1, 2)'
+            f"Unexpected prediction shape: {prediction.shape}. Should be (1, 2)"
         )
 
-    return {'prediction': label, 'confidence': float(prediction[0, winner_index])}
+    return {"prediction": label, "confidence": float(prediction[0, winner_index])}
