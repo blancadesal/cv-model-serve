@@ -3,4 +3,3 @@ FLASK_CONFIG=development
 SECRET_KEY=not_so_secret
 CELERY_BROKER_URL=redis://redis:6379/0
 CELERY_RESULT_BACKEND=redis://redis:6379/0
-SOCKETIO_MESSAGE_QUEUE=redis://redis:6379/0

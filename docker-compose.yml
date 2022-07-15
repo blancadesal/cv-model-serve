@@ -42,7 +42,7 @@ services:
     env_file:
       - .env/.dev
     environment:
-      - FLASK_APP=celery_app
+      - FLASK_APP=app
     depends_on:
       - redis
       #- db
@@ -59,7 +59,7 @@ services:
     env_file:
       - .env/.dev
     environment:
-      - FLASK_APP=celery_app
+      - FLASK_APP=app
     ports:
       - 5555:5555
     depends_on:
