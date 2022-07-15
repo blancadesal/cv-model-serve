@@ -21,8 +21,15 @@ tensorflow = "^2.9.1"
 pytest = "^5.2"
 black = {version = "^22.6.0", allow-prereleases = true}
 isort = "^5.10.1"
+pre-commit = "^2.20.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
