@@ -9,7 +9,7 @@ from api.prediction.tasks import get_prediction, get_prediction_from_url
 
 class Predict(Resource):
     def get(self):
-        '''Predict from URL'''
+        """Predict from URL"""
         image_url = request.args.get("image_url", None)
         if image_url is None:
             return "Parameter image_url not found.", 400
@@ -18,6 +18,7 @@ class Predict(Resource):
 
         task: AsyncResult = get_prediction_from_url.delay(image_url)
         return {"task_id": task.id}
+
     def post(self):
         """Predict from image file"""
         image = request.files["image"].read()
