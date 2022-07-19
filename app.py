@@ -5,7 +5,10 @@ from celery.result import AsyncResult
 from flask import request
 
 from cv_model_serve import create_app, ext_celery
-from cv_model_serve.image_classifier.tasks import get_prediction
+from cv_model_serve.image_classifier.tasks import (
+    get_prediction,
+    get_prediction_from_url,
+)
 
 app = create_app()
 celery = ext_celery.celery
@@ -17,9 +20,21 @@ def hello():
 
 
 @app.route("/predict", methods=["POST"])
-def predict():
+def predict_form_post():
     image = request.files["image"].read()
     task: AsyncResult = get_prediction.delay(base64.encodebytes(image).decode("ascii"))
+    return {"task_id": task.id}
+
+
+@app.route("/predict", methods=["GET"])
+def predict_from_url():
+    image_url = request.args.get("image_url", None)
+    if image_url is None:
+        return "Parameter image_url not found.", 400
+    if not image_url.startswith("https://upload.wikimedia.org"):
+        return "Only urls from https://upload.wikimedia.org are allowed", 400
+
+    task: AsyncResult = get_prediction_from_url.delay(image_url)
     return {"task_id": task.id}
 
 
