@@ -15,7 +15,9 @@ MODELS: dict[str, Any] = {}
 def get_prediction(image_path: str) -> dict:
 
     preprocessed_image = pre_process(base64.decodebytes(image_path.encode("ascii")))
-    model_path = Path(__file__).parent / "cv_models" / "image-content-filtration.h5"
+    model_path = (
+        Path(__file__).parent.parent / "cv_models" / "image-content-filtration.h5"
+    )
     if model_path not in MODELS:
         MODELS[str(model_path)] = load_model(model_path)
 
@@ -37,7 +39,9 @@ def get_prediction_from_url(image_url: str) -> dict:
     response.raise_for_status()
 
     preprocessed_image = pre_process(response.raw.read())
-    model_path = Path(__file__).parent / "cv_models" / "image-content-filtration.h5"
+    model_path = (
+        Path(__file__).parent.parent / "cv_models" / "image-content-filtration.h5"
+    )
     if model_path not in MODELS:
         MODELS[str(model_path)] = load_model(model_path)
 

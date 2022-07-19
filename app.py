@@ -1,69 +1,26 @@
-import base64
 import subprocess
 
-from celery.result import AsyncResult
-from flask import request
+from flasgger import Swagger
+from flask_restful import Api
 
-from cv_model_serve import create_app, ext_celery
-from cv_model_serve.image_classifier.tasks import (
-    get_prediction,
-    get_prediction_from_url,
-)
+from api import create_app, ext_celery
+from api.resources.index import Index, Username
+from api.resources.predict import Predict, Results
 
 app = create_app()
+api = Api(app)
 celery = ext_celery.celery
+swagger = Swagger(app)
 
 
-@app.route("/")
-def hello():
-    return "Hello, World!"
+# Routes
+api.add_resource(Index, "/")
+api.add_resource(Predict, "/predict")
+api.add_resource(Results, "/results/<task_id>")
+api.add_resource(Username, "/username/<username>")  # Just to test Swagger
 
 
-@app.route("/predict", methods=["POST"])
-def predict_form_post():
-    image = request.files["image"].read()
-    task: AsyncResult = get_prediction.delay(base64.encodebytes(image).decode("ascii"))
-    return {"task_id": task.id}
-
-
-@app.route("/predict", methods=["GET"])
-def predict_from_url():
-    image_url = request.args.get("image_url", None)
-    if image_url is None:
-        return "Parameter image_url not found.", 400
-    if not image_url.startswith("https://upload.wikimedia.org"):
-        return "Only urls from https://upload.wikimedia.org are allowed", 400
-
-    task: AsyncResult = get_prediction_from_url.delay(image_url)
-    return {"task_id": task.id}
-
-
-@app.route("/task/<task_id>", methods=["GET"])
-def get_task(task_id: str):
-    my_task = AsyncResult(task_id)
-    response = {
-        "task_id": task_id,
-        "state": my_task.state,
-    }
-    if my_task.state == "FAILURE":
-        response.update(
-            {
-                "error": str(my_task.result),
-                "result": None,
-            }
-        )
-    else:
-        response.update(
-            {
-                "error": None,
-                "result": (
-                    my_task.result if my_task.result is None else str(my_task.result)
-                ),
-            }
-        )
-    return response
-
-
+# Enable celery auto reloading
 def run_worker():
     subprocess.call(["celery", "-A", "app.celery", "worker", "--loglevel=info"])
 
@@ -72,7 +29,7 @@ def run_worker():
 def celery_worker():
     from watchgod import run_process
 
-    run_process("./cv_model_serve", run_worker)
+    run_process("./api", run_worker)
 
 
 if __name__ == "__main__":
