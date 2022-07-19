@@ -1,13 +1,10 @@
 import os
 
+from celery import current_app as current_celery_app
 from flask import Flask
 from flask_celeryext import FlaskCeleryExt
 
-from cv_model_serve.celery_utils import make_celery
-from cv_model_serve.config import config
-
-# instantiate extensions
-ext_celery = FlaskCeleryExt(create_celery_app=make_celery)
+from api.config import config
 
 
 def create_app(config_name=None):
@@ -29,3 +26,13 @@ def create_app(config_name=None):
         return {"app": app}
 
     return app
+
+
+def make_celery(app):
+    celery = current_celery_app
+    celery.config_from_object(app.config, namespace="CELERY")
+
+    return celery
+
+
+ext_celery = FlaskCeleryExt(create_celery_app=make_celery)
