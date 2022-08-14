@@ -4,6 +4,17 @@ Current status
 There is a `/predict` endpoint! It works! We tested with a few different images, all SFW because we're in a coworking space and don't want people to think bad things about us...
 Preliminary results: cats are safer than dogs xD
 
+You can pass a `model_name` parameter to select which model to use, for a list of available model names you can use:
+
+ dcaro@vulcanus$ curl http://127.0.0.1:5000/model
+ {
+   "models": [
+     "hal-retraining_run_3.h5",
+     "image-content-filtration.h5"
+   ]
+ }
+
+
 Implemented a `/task/<task_id>` endpoint to get the results of the tasks triggered. An example of the interaction::
 
 
@@ -35,7 +46,6 @@ Implemented a `/task/<task_id>` endpoint to get the results of the tasks trigger
 
 Implemented also a GET version of `/predict` that accepts a `image_url` parameter (url from https://upload.wikimedia.org)::
 
-
  dcaro@vulcanus$ curl -vv 'http://127.0.0.1:5000/predict?image_url=https://upload.wikimedia.org/wikipedia/commons/5/57/Puesta_de_sol%2C_desierto_de_Namib%2C_Namibia%2C_2018-08-05%2C_DD_84-90_PAN.jpg'
  < HTTP/1.1 200 OK
  < Server: Werkzeug/2.1.2 Python/3.9.13
@@ -55,6 +65,7 @@ Implemented also a GET version of `/predict` that accepts a `image_url` paramete
    "state": "SUCCESS",
    "task_id": "27ac478e-8712-4a87-a10a-b0ec2eb18eb4"
  }
+
 
 Installation
 ============

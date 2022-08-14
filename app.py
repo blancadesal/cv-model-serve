@@ -5,6 +5,7 @@ from celery.result import AsyncResult
 from flask import request
 
 from cv_model_serve import create_app, ext_celery
+from cv_model_serve.image_classifier import models
 from cv_model_serve.image_classifier.tasks import (
     get_prediction,
     get_prediction_from_url,
@@ -22,20 +23,34 @@ def hello():
 @app.route("/predict", methods=["POST"])
 def predict_form_post():
     image = request.files["image"].read()
-    task: AsyncResult = get_prediction.delay(base64.encodebytes(image).decode("ascii"))
+    model_name = request.args.get("model_name", None)
+    params = {"image_url": base64.encodebytes(image).decode("ascii")}
+    if model_name:
+        params["model_name"] = model_name
+
+    task: AsyncResult = get_prediction.delay(**params)
     return {"task_id": task.id}
 
 
 @app.route("/predict", methods=["GET"])
 def predict_from_url():
     image_url = request.args.get("image_url", None)
+    model_name = request.args.get("model_name", None)
     if image_url is None:
         return "Parameter image_url not found.", 400
     if not image_url.startswith("https://upload.wikimedia.org"):
         return "Only urls from https://upload.wikimedia.org are allowed", 400
 
-    task: AsyncResult = get_prediction_from_url.delay(image_url)
+    params = {"image_url": image_url}
+    if model_name:
+        params["model_name"] = model_name
+    task: AsyncResult = get_prediction_from_url.delay(**params)
     return {"task_id": task.id}
+
+
+@app.route("/model", methods=["GET"])
+def get_models():
+    return {"models": models.get_models()}
 
 
 @app.route("/task/<task_id>", methods=["GET"])
