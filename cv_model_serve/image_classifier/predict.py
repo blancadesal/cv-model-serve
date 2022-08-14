@@ -1,12 +1,5 @@
-from pathlib import Path
-
 from numpy import argmax, ndarray
-from tensorflow.keras import models
 from tensorflow.keras.models import Model
-
-
-def load_model(path: Path) -> Model:
-    return models.load_model(path)
 
 
 def predict(model: Model, sample: ndarray) -> dict:

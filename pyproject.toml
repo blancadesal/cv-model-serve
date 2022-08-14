@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cv-model-serve"
-version = "0.1.0"
+version = "0.2.0"
 description = ""
 authors = ["Slavina Stefanova <slavina.stefanova@gmail.com>", "David Caro <me@dcaro.es>"]
 

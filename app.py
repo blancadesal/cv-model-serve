@@ -5,6 +5,7 @@ from celery.result import AsyncResult
 from flask import request
 
 from cv_model_serve import create_app, ext_celery
+from cv_model_serve.image_classifier import models
 from cv_model_serve.image_classifier.tasks import (
     get_prediction,
     get_prediction_from_url,
@@ -45,6 +46,11 @@ def predict_from_url():
         params["model_name"] = model_name
     task: AsyncResult = get_prediction_from_url.delay(**params)
     return {"task_id": task.id}
+
+
+@app.route("/model", methods=["GET"])
+def get_models():
+    return {"models": models.get_models()}
 
 
 @app.route("/task/<task_id>", methods=["GET"])
